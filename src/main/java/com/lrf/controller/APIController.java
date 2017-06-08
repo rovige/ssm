@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.lrf.service.IntfService;
+import com.lrf.utils.SpringUtil;
+
 @Controller
 @RequestMapping("/api")
 public class APIController {
@@ -30,8 +33,10 @@ public class APIController {
 	public Object v2(@PathVariable("busiCode") String busiCode,
 			HttpServletRequest request, HttpServletResponse response) {
 		System.out.println(busiCode);
+		IntfService service = (IntfService)SpringUtil.getObject("userService");
 		Map paraMap = getRequestParaMap(request);
-		return getResponseData("1", "sucess", paraMap);
+		Object retData  = service.handle(paraMap);
+		return getResponseData("1", "sucess", retData);
 	}
 
 	private Map getRequestParaMap(HttpServletRequest request) {
