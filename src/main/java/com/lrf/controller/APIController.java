@@ -1,6 +1,5 @@
 package com.lrf.controller;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -9,17 +8,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.lrf.service.IntfService;
 import com.lrf.utils.SpringUtil;
-
+/**
+ * API接口类
+ * @author lrf
+ *
+ */
 @Controller
 @RequestMapping("/api")
-public class APIController {
+public class APIController  extends BaseController{
 	@RequestMapping(value = "/v1/*", consumes = "application/json,text/html;", produces = "text/json;charset=UTF-8")
 	@ResponseBody
 	public Object index(HttpServletRequest request, HttpServletResponse response) {
@@ -36,27 +38,7 @@ public class APIController {
 		IntfService service = (IntfService)SpringUtil.getObject("userService");
 		Map paraMap = getRequestParaMap(request);
 		Object retData  = service.handle(paraMap);
-		return getResponseData("1", "sucess", retData);
-	}
-
-	private Map getRequestParaMap(HttpServletRequest request) {
-		Enumeration<String> enumStr = request.getParameterNames();
-		Map paraMap = new HashMap<>();
-			while (enumStr.hasMoreElements()) {
-				String s = enumStr.nextElement();
-				String[] values = request.getParameterValues(s);
-				String 		value = new String(values[0].getBytes());
-				paraMap.put(s, value);
-			}
-		return paraMap;
-	}
-
-	private Map getResponseData(String retCode, String msg, Object data) {
-		Map retData = new HashMap<>();
-		retData.put("reponse_code", retCode);
-		retData.put("reponse_msg", msg);
-		retData.put("data", data);
-		return retData;
+		return getSucessJSONData(retData);
 	}
 
 }
